@@ -3,10 +3,7 @@ package com.anirban.learnspringsecurity.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.anirban.learnspringsecurity.models.Product;

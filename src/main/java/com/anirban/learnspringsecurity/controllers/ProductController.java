@@ -23,7 +23,7 @@ public class ProductController {
 
     @GetMapping("/welcome")
     public String welcome() {
-        return "Welcome this endpoint is not secure";
+        return "Welcome to the product catalog";
     }
 
   
@@ -38,5 +38,7 @@ public class ProductController {
     public Product getProductById(@PathVariable int id) {
         return service.getProductById(id);
     }
+    
+ 
 
 }
