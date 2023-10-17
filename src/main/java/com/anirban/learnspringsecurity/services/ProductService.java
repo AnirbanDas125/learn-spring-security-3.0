@@ -40,7 +40,13 @@ public class ProductService {
     }
     
     public Product getProductById(int id) {
-    	return productList.get(id);
+    	for(Product p : productList) {
+    		if(p.getProductId() == id) {
+    		  return p;	
+    		}
+    	}
+    	
+    	return null;
     }
 
 }
