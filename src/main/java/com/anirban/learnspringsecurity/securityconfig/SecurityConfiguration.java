@@ -2,6 +2,7 @@ package com.anirban.learnspringsecurity.securityconfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -14,6 +15,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration //Since this is a security config class we use this annotation
 @EnableWebSecurity //This annotation enables custom security configuration
+@EnableMethodSecurity 
+/*
+By applying the @EnableMethodSecurity annotation to your Spring configuration class, 
+you enable method-level security for your application. 
+This allows you to annotate methods with security annotations 
+to specify who can access those methods and under what Roles.
+*/
 public class SecurityConfiguration {
 
 
@@ -22,22 +30,25 @@ It's designed to retrieve user information and build a UserDetails object, which
 	
 	@Bean
 	public UserDetailsService userDetailsService(PasswordEncoder encoder) { //This bean is for Authentication purpose
-//Using UserDetails objects we are initializing user-names roles and password		
-		UserDetails admin = User.withUsername("anirban.das")
-				                 .password(encoder.encode("adminpassword"))
-				                 .roles("ADMIN")
-				                 .build();
-/*In this context, the encoder method is responsible for securely hashing the passwords using the configured password encoder, 
- * which is a BCryptPasswordEncoder in your case.*/
+////Using UserDetails objects we are initializing user-names roles and password
+////In real project we will fetch user details from DB and the authenticate 		
+//		UserDetails admin = User.withUsername("anirban.das")
+//				                 .password(encoder.encode("adminpassword"))
+//				                 .roles("ADMIN")
+//				                 .build();
+///*In this context, the encoder method is responsible for securely hashing the passwords using the configured password encoder, 
+// * which is a BCryptPasswordEncoder in your case.*/
+//		
+//		UserDetails normalUser = User.withUsername("tushar.kumar") //User is a built in class that has a model of user in it
+//                .password(encoder.encode("normaluserpassword"))    //We use User class to store username and passowrd and much more
+//                .roles("USER") 
+//                .build();
+//		
+//	return new InMemoryUserDetailsManager(admin,normalUser);//Since we dont have a database to verify the creds we are using this
+////The InMemoryUserDetailsManager is a class provided by Spring Security that allows you to define and manage user details in memory
+////Used mainly for dev and testing purposes 
 		
-		UserDetails normalUser = User.withUsername("tushar.kumar") //User is a built in class that has a model of user in it
-                .password(encoder.encode("simpleuserpassword"))    //We use User class to store username and passowrd and much more
-                .roles("USER") 
-                .build();
-		
-	return new InMemoryUserDetailsManager(admin,normalUser);//Since we dont have a database to verify the creds we are using this
-//The InMemoryUserDetailsManager is a class provided by Spring Security that allows you to define and manage user details in memory
-//Used mainly for dev and testing purposes 	
+		return new UserInfoUserDetailsService();
 	}
 
 	//Here is the password encoder configuration Bean
@@ -50,8 +61,8 @@ It's designed to retrieve user information and build a UserDetails object, which
 	@Bean
 	public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception{//This bean is for Authorization purpose
 		return http.csrf().disable()
-		           .authorizeHttpRequests()
-		           .requestMatchers("/products/welcome").permitAll()
+		           .authorizeHttpRequests().requestMatchers("/products/welcome").permitAll()
+		           .and().authorizeHttpRequests().requestMatchers("/products/addNewUser").permitAll()
 		           .and().authorizeHttpRequests()
 		                  .requestMatchers("/products/**").authenticated()
 		                  .and().formLogin()

@@ -1,5 +1,7 @@
 package com.anirban.learnspringsecurity.models;
 
+
+
 public class Product {
 	
 	 private int productId;
